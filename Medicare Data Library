@@ -1,0 +1,58 @@
+import pandas as pd
+
+
+import psycopg2
+conn = psycopg2.connect(
+     host="localhost",
+     database ="medicare_physician_services_summary",
+     user="postgres",
+     password="288889")
+       
+
+col_names = ['PROVCRED', 'PROVGNDR', 'ENTITYCD', 'ADDRS1',
+             'ADDRS2', 'CITY', 'STATECD', 'STATE_FIPS', 'ZIPCD',
+             'RUCA', 'RUCACD', 'CNTRY', 'PVDRTPE', 'SPECIALTY_CD',
+             'MEDCREPARTIC', 'TOTHCPCSCDS', 'TOTBENEFIC', 'TOTSRVCS',
+             'TOT_SBMTD_CHRG', 'MDCR_ALLOWED_AMT', 'TOTMDCR_PYMT_AMT',
+             'TOTMDCR_STAND_PAYAMT', 'DRG_SUPPRESS_INDCTR', 'DRUG_TOT_HCPCS_CDS',
+             'Drug_Tot_Benes', 'Drug_Tot_Srvcs', 'Drug_Sbmtd_Chrg',
+             'Drug_Mdcr_Alowd_Amt', 'Drug_Mdcr_Pymt_Amt', 'Drug_Mdcr_Stdzd_Amt',
+             'Med_Sprsn_Ind','Med_Tot_HCPCS_Cds', 'Med_Tot_Benes', 'Med_Tot_Srvcs',
+             'Med_Sbmtd_Chrg', 'Med_Mdcr_Alowd_Amt', 'Med_Mdcr_Pymt_Amt',
+             'Med_Mdcr_Stdzd_Amt', 'Bene_Avg_Age', 'Bene_Age_LT_65_Cnt',
+             'Bene_Age_65_74_Cnt', 'Bene_Age_75_84_Cnt', 'Bene_Age_GT_84_Cnt',
+             'Bene_Feml_Cnt', 'Bene_Male_Cnt', 'Bene_Race_Wht_Cnt',
+             'Bene_Race_Black_Cnt', 'Bene_Race_API_Cnt', 'Bene_Race_Hspnc_Cnt',
+             'Bene_Race_NatInd_Cnt', 'Bene_Race_Othr_Cnt', 'Bene_Dual_Cnt',
+             'Bene_Ndual_Cnt', 'Bene_CC_AF_Pct', 'Bene_CC_Alzhmr_Pct',
+             'Bene_CC_Asthma_Pct', 'Bene_CC_Cncr_Pct', 'Bene_CC_CHF_Pct',
+             'Bene_CC_CKD_Pct', 'Bene_CC_COPD_Pct', 'Bene_CC_Dprssn_Pct',
+             'Bene_CC_Dbts_Pct', 'Bene_CC_Hyplpdma_Pct', 'Bene_CC_Hyprtnsn_Pct',
+             'Bene_CC_IHD_Pct',  'Bene_CC_Opo_Pct', 'Bene_CC_RAOA_Pct',
+             'Bene_CC_Sz_Pct', 'Bene_CC_Strok_Pct', 'Bene_Avg_Risk_Scre']
+
+dtypes = {'PROVCRED': str, 'PROVGNDR': str, 'ENTITYCD': str, 'ADDRS1': object,
+          'ADDRS2': object, 'CITY': str, 'STATECD': str, 'STATE_FIPS': str, 'ZIPCD': str,
+          'RUCA': str, 'RUCACD': str, 'CNTRY': str, 'PVDRTPE': str, 'SPECIALTY_CD': str,
+          'MEDCREPARTIC': str, 'TOTHCPCSCDS': str, 'TOTBENEFIC': str, 'TOTSRVCS': str,
+          'TOT_SBMTD_CHRG': str, 'MDCR_ALLOWED_AMT': str, 'TOTMDCR_PYMT_AMT': str,
+          'TOTMDCR_STAND_PAYAMT': str, 'DRG_SUPPRESS_INDCTR': str, 'DRUG_TOT_HCPCS_CDS': str,
+          'Drug_Tot_Benes': str, 'Drug_Tot_Srvcs': str, 'Drug_Sbmtd_Chrg': str,
+          'Drug_Mdcr_Alowd_Amt': str, 'Drug_Mdcr_Pymt_Amt': str, 'Drug_Mdcr_Stdzd_Amt': str,
+          'Med_Sprsn_Ind':str,'Med_Tot_HCPCS_Cds': str, 'Med_Tot_Benes': str, 'Med_Tot_Srvcs': str,
+          'Med_Sbmtd_Chrg': str, 'Med_Mdcr_Alowd_Amt': str, 'Med_Mdcr_Pymt_Amt': str,
+          'Med_Mdcr_Stdzd_Amt': str, 'Bene_Avg_Age': str, 'Bene_Age_LT_65_Cnt': str,
+          'Bene_Age_65_74_Cnt': str, 'Bene_Age_75_84_Cnt': str, 'Bene_Age_GT_84_Cnt': str,
+          'Bene_Feml_Cnt': str, 'Bene_Male_Cnt': str, 'Bene_Race_Wht_Cnt': str,
+          'Bene_Race_Black_Cnt': str, 'Bene_Race_API_Cnt': str, 'Bene_Race_Hspnc_Cnt': str,
+          'Bene_Race_NatInd_Cnt': str, 'Bene_Race_Othr_Cnt': str, 'Bene_Dual_Cnt': str,
+          'Bene_Ndual_Cnt': str, 'Bene_CC_AF_Pct': str, 'Bene_CC_Alzhmr_Pct': str,
+          'Bene_CC_Asthma_Pct': str, 'Bene_CC_Cncr_Pct': str, 'Bene_CC_CHF_Pct': str,
+          'Bene_CC_CKD_Pct': str, 'Bene_CC_COPD_Pct': str, 'Bene_CC_Dprssn_Pct': str,
+          'Bene_CC_Dbts_Pct': str, 'Bene_CC_Hyplpdma_Pct': str, 'Bene_CC_Hyprtnsn_Pct': str,
+          'Bene_CC_IHD_Pct': str,  'Bene_CC_Opo_Pct': str, 'Bene_CC_RAOA_Pct': str,
+          'Bene_CC_Sz_Pct': str, 'Bene_CC_Strok_Pct': str, 'Bene_Avg_Risk_Scre': str}
+
+user1 = pd.read_csv('C:\\Users\\coten\\Downloads\\Medicare_Physician_Other_Practitioners_by_Provider_and_Service_2021\\Medicare_Physician_Other_Practitioners_by_Provider_and_Service_2021.csv', nrows=50, names=col_names, header=0)
+import csv
+
