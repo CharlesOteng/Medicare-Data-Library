@@ -1,4 +1,4 @@
-This code, written in python on Spyder IDE 
+## This code, written in python on Spyder IDE 
 
 ## 1. Imports libraries for data processing (pandas), pycopg2 (connect to PostgreSQL Database)
 
